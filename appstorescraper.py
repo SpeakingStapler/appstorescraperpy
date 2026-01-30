@@ -9,6 +9,9 @@ from urllib3.util.retry import Retry
 import random
 import time
 
+from models.app import App
+
+
 # extend AppStoreScraper to get reviews
 class AppStoreScraper:
     __landing_host = "apps.apple.com"
@@ -142,7 +145,7 @@ class AppStoreScraper:
 
         return reviews,request_offset
        
-    def check_review_availability(app_id,country,headers = None):
+    def _check_review_availability(app_id,country,headers = None):
 
         logging.info(f"Checking review availability for app id '{app_id}' for country code '{country}'")
 
@@ -170,16 +173,16 @@ class AppStoreScraper:
                 "status_code":result.status_code,
                 "message": result.text if result.status_code != 200 else ''}
 
-    def get_countries_with_reviews(app_id,sleep:int=0.5):
+    def _get_countries_with_reviews(app_id,sleep:int=0.5):
         for country in pycountry.countries:
-            res = AppStoreScraper.check_review_availability(app_id,country.alpha_2.lower())
+            res = AppStoreScraper._check_review_availability(app_id,country.alpha_2.lower())
             if res['has_reviews']:
                 yield {'alpha_2':country.alpha_2.lower(),'name':country.name}
 
             if sleep and type(sleep) is int:
                 time.sleep(sleep)
    
-    def get_app_reviews(app_id,count:int = None,sleep:int = 0.3):
+    def _get_app_reviews(app_id,count:int = None,sleep:int = 0.3):
         reviews = []
         offset = 0
         for country in pycountry.countries:
@@ -189,7 +192,7 @@ class AppStoreScraper:
             # build header
             headers = AppStoreScraper.__build_review_header(landing_url,AppStoreScraper.__get_review_token(landing_url))
 
-            if not AppStoreScraper.check_review_availability(app_id,country.alpha_2.lower(),headers)['has_reviews']:
+            if not AppStoreScraper._check_review_availability(app_id,country.alpha_2.lower(),headers)['has_reviews']:
                 continue
 
             logging.info(f'Retrieving reviews of app id {app_id} for country {country.name}')
@@ -201,17 +204,17 @@ class AppStoreScraper:
             
         return reviews
 
-    def get_app_reviews_per_country(app_id, country=None, count:int = None,offset:int = 0, sleep:int = 0.3):
+    def _get_app_reviews_per_country(app_id, country=None, count:int = None,offset:int = 0, sleep:int = 0.3):
         landing_url = AppStoreScraper.__build_landing_url(country,app_id)
         # build header
         headers = AppStoreScraper.__build_review_header(landing_url,AppStoreScraper.__get_review_token(landing_url))
 
-        if not AppStoreScraper.check_review_availability(app_id,country,headers)['has_reviews']:
+        if not AppStoreScraper._check_review_availability(app_id,country,headers)['has_reviews']:
             raise ValueError(f'No reviews found for country code {country}')
         
         return AppStoreScraper.__get_app_reviews_per_country(app_id,country,count,offset,sleep)
    
-    def get_app_details(app_id,country):
+    def _get_app_details(app_id,country):
         url = f"{AppStoreScraper.__base_request_url}/v1/catalog/{country}/apps/{app_id}"
 
         # generate token
@@ -228,3 +231,9 @@ class AppStoreScraper:
         res = AppStoreScraper.__get(url,headers,params = request_params)
 
         return res.json()['data'][0]
+
+
+    def get_app(app_id,country='us') -> App:
+        _details = AppStoreScraper._get_app_details(app_id,country)
+
+        return App(_details)
