@@ -29,13 +29,17 @@ def test_getappratings():
         assert False
 
 def test_getreviews_base():
-    import datetime
-    import json
-    from core import AppleScraper
 
-    reviews = AppleScraper._get_app_reviews_per_country(app_id, 'us',20,0)
-    with open(f'tests/logs/app_reviews_{datetime.datetime.now().strftime('%d%m%y%H%M%S')}', 'w+') as logfile:
-        logfile.write(json.dumps(reviews))
+    app = appstorescraper.get_app(app_id=app_id)
+    logging.info(f'App name: {app.name} | App ID: {app.id} | Ave rating: {app.ratings.average}')
+
+    review_data = app.get_reviews()
+
+    for review in review_data[0]:
+        logging.info(f'Title: {review.title} | Review: {review.content}')
+
+    logging.info(f'Offset: {review_data[1]}')
+    
     assert True
     
 
