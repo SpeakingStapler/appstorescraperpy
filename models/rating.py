@@ -5,6 +5,10 @@ class Rating:
     def __init__(self, data):
         self._data = data
 
+
+    @property
+    def data(self):
+        return self._data
     
     @property
     def count(self) -> int:
@@ -14,7 +18,6 @@ class Rating:
     def average(self) -> float:
         return self._data['value']
     
-
     @property
     def list(self) -> List[int]:
         return self._data['ratingCountList']

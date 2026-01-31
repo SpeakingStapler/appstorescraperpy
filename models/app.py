@@ -1,11 +1,12 @@
-from dataclasses import dataclass
 from models.rating import Rating
+from models.reviews import Reviews
 
 class App:
 
-    
-    def __init__(self,data):
+    def __init__(self,data,country):
         self._data:object = data
+        self.country = country
+        self._reviews:Reviews = None
     
     @property
     def id(self):
@@ -29,5 +30,16 @@ class App:
 
         return _ratings
 
-    def get_reviews(self):
+    @property
+    def reviews(self) -> Reviews:
+
+        if not self._reviews:
+            self._reviews = Reviews(self)
+
+        return self._reviews
+    
+
+    def get_reviews(self,count=100):
+
         raise NotImplementedError("get_reviews yet implemented")
+    

@@ -1,14 +1,13 @@
 import appstorescraper
 import logging
 
-
 app_id = '284882215'
 app_name = 'Facebook'
 
 def test_getappdetails():
 
     try:
-        app = appstorescraper.AppStoreScraper.get_app(app_id)
+        app = appstorescraper.get_app(app_id)
 
         logging.info(f'App name: {app.name} | App ID: {app.id}')
         assert app.name == app_name
@@ -20,7 +19,7 @@ def test_getappdetails():
     
 def test_getappratings():
     try:
-        app = appstorescraper.AppStoreScraper.get_app(app_id=app_id)
+        app = appstorescraper.get_app(app_id=app_id)
         logging.info(f'App name: {app.name} | App ID: {app.id} | Ave rating: {app.ratings.average}')
         logging.info('1-star:{0} | 2-star:{1} | 3-star: {2} | 4-star: {3} | 5-star: {4}'.format(*app.ratings.list))
         assert True
@@ -28,6 +27,50 @@ def test_getappratings():
     except Exception as e:
         logging.error(e)
         assert False
+
+def test_getreviews_base():
+    import datetime
+    import json
+    from core import AppleScraper
+
+    reviews = AppleScraper._get_app_reviews_per_country(app_id, 'us',20,0)
+    with open(f'tests/logs/app_reviews_{datetime.datetime.now().strftime('%d%m%y%H%M%S')}', 'w+') as logfile:
+        logfile.write(json.dumps(reviews))
+    assert True
+    
+
+def test_getreview_app():
+    app = appstorescraper.get_app(app_id)
+    logging.info(f'App name: {app.name} | App ID: {app.id} | Ave rating: {app.ratings.average}')
+    logging.info('1-star:{0} | 2-star:{1} | 3-star: {2} | 4-star: {3} | 5-star: {4}'.format(*app.ratings.list))
+
+    review = next(app.reviews)
+    logging.info(f'Title: {review.title} | Review: {review.content}')
+
+    assert True
+
+def test_getreviews_app():
+    app = appstorescraper.get_app(app_id)
+    logging.info(f'App name: {app.name} | App ID: {app.id} | Ave rating: {app.ratings.average}')
+    logging.info('1-star:{0} | 2-star:{1} | 3-star: {2} | 4-star: {3} | 5-star: {4}'.format(*app.ratings.list))
+
+    for _ in range(30):  
+        review = next(app.reviews)
+        logging.info(f'Title: {review.title} | Review: {review.content}')
+
+    
+    assert True
+
+
+def test_getnthreview():
+    app = appstorescraper.get_app(app_id)
+    logging.info(f'App name: {app.name} | App ID: {app.id} | Ave rating: {app.ratings.average}')
+    logging.info('1-star:{0} | 2-star:{1} | 3-star: {2} | 4-star: {3} | 5-star: {4}'.format(*app.ratings.list))
+    logging.info('Get 31st review')
+    review = app.reviews[31]
+    logging.info(f'Title: {review.title} | Review: {review.content}')
+
+    assert True
 
 
 
