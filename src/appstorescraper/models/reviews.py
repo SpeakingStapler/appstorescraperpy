@@ -1,5 +1,5 @@
-from models.review import Review
-from core import AppleScraper
+from .review import Review
+from ..core import AppleScraper
 import logging
 
 class Reviews:

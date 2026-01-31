@@ -1,5 +1,5 @@
-from core import AppleScraper
-from models import App
+from .core import AppleScraper
+from .models import App
 
 
 def get_app(app_id,country='us') -> App:

@@ -1,4 +1,5 @@
 import appstorescraper
+
 import logging
 
 app_id = '284882215'

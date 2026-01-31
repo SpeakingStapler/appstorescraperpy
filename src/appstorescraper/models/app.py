@@ -1,9 +1,9 @@
-from models.rating import Rating
-from models.reviews import Reviews
-from models.review import Review
+from .rating import Rating
+from .reviews import Reviews
+from .review import Review
 from typing import List
 
-from core import AppleScraper
+from ..core import AppleScraper
 
 class App:
 

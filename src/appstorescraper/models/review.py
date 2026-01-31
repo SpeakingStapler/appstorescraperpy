@@ -1,11 +1,14 @@
 import datetime
-
+import json
 
 class Review:
 
     def __init__(self,data,app):
         self._app = app
         self._data = data
+
+    def __str__(self):
+        return json.dumps(self._data,indent=1)
 
     @property
     def app(self):
