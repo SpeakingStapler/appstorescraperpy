@@ -18,7 +18,7 @@ build-backend = "setuptools.build_meta" # If not defined, then legacy behavior c
 
 name = "appstorescraperpy" # REQUIRED, is the only field that cannot be marked as dynamic.
 
-version = "0.0.1" # REQUIRED, although can be dynamic
+version = "0.0.5" # REQUIRED, although can be dynamic
 
 readme = "README.md"
 
@@ -97,9 +97,7 @@ dependencies = ["requests==2.32.5","pycountry==24.6.1"]
 # Optional dependencies the project provides. These are commonly
 # referred to as "extras". For a more extensive definition see:
 # https://packaging.python.org/en/latest/specifications/dependency-specifiers/#extras
-[project.optional-dependencies]
-dev = []
-test = []
+
 
 # List URLs that are relevant to your project
 #
