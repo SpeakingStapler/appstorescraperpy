@@ -1,11 +1,18 @@
 # appstorescraperpy
 Apple App Store Scraper written in python
 
+
+
 ## Apple App Store Scraper
 This is based on cowboy-bebug's <a href='https://github.com/cowboy-bebug/app-store-scraper'>app-store-scraper </a> (now deprecated) as this is the only project I've seen that is able to retrieve all the App Store reviews. The project is now deprecated and Apple has changed some of the ways to retrieve the data compared to cowboy-bebug's method. 
 
 I initially used this on an Azure Function and I did not implement custom classes and let the caller parse the JSON data themselves. This iteration I included classes to handle the data. 
 
+### To install
+
+```
+python3 -m pip install appstorescraperpy
+```
 
 ## Usage
 
