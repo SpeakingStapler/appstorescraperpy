@@ -63,6 +63,22 @@ app.ratings.five_star
 # to get the raw data from the App Store
 print(app.ratings.data)
 ```
+Sample ratings data
+
+```json
+{
+    "ariaLabelForRatings": "4.9 stars",
+    "ratingCount": 318959,
+    "ratingCountList": [
+        3925,
+        928,
+        2700,
+        10776,
+        300630
+    ],
+    "value": 4.9
+}
+```
 
 ### For reviews
 
@@ -103,15 +119,7 @@ print(app.reviews[10])
 
 # usage
 reviews = app.get_reviews(count=100,offset=0)
-# This is an iterator so you can use next() 
-print(next(app.reviews))
 
-# or use a for loop
-for review in app.reviews:
-    print(review)
-
-# you can also get the nth review
-print(app.reviews[10])
 ```
 
 The next ones did not get tested thoroughly so use with caution
@@ -119,14 +127,42 @@ The next ones did not get tested thoroughly so use with caution
 ### get_countries_with_reviews
 This gives you a list of countries which has at least one retrievable review. This is an expensive all as it goes through all countries and get one review for checking
 
-It returns a pycountry Database object
+It returns a dictionary list with data
+```json
+{
+    "alpha_2": "{country_code}",
+    "name": "{country_name}"
+}
+```
 
 Sample usage
 
 ```python
 
-from appstorescraper.core.AppleScraper import get_countries_with_reviews
+from appstorescraper.core import AppleScraper
+
+for country in AppleScraper.get_countries_with_reviews(app_id,sleep=1):
+    print(country)
 
 ```
 
 ### check_review_availability
+This checks if a given country code has a retrievable review. Note that is still possible for a country to have a rating but no review
+
+Sample usage
+
+```python
+from appstorescraper.core import AppleScraper
+
+app_id = '284882215'
+print(AppleScraper.check_review_availability(app_id, 'ph'))
+```
+
+Sample result
+```json
+{
+    "has_reviews": true,
+    "status_code": 200,
+    "message": ""
+}
+```

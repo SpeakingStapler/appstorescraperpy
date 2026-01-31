@@ -171,7 +171,47 @@ class AppleScraper:
                 "status_code":result.status_code,
                 "message": result.text if result.status_code != 200 else ''}
 
-    def get_countries_with_reviews(app_id,sleep:int=0.5):
+    def get_countries_with_reviews(app_id,sleep:float=0.5):
+        '''
+        This gives you a list of countries which has at least one retrievable review. This is an expensive all as it goes through all countries and get one review for checking
+
+        It returns a dictionary list with data
+
+        ```
+        {
+            "alpha_2": "{country_code}",
+            "name": "{country_name}"
+        }
+        ```
+
+        Sample usage
+
+        ```python
+
+        from appstorescraper.core import AppleScraper
+
+        for country in AppleScraper.get_countries_with_reviews(app_id,sleep=1):
+            print(country)
+
+        ```
+
+        arguments
+        
+        app_id: string. The app ID can be seen in the URL of the app page.
+
+        For example, Facebook's  URL in the App Store is:
+
+        ```
+        https://apps.apple.com/us/app/facebook/id284882215
+        ```
+
+        It's app ID is 
+        ```
+        284882215
+        ```
+
+        sleep: float. Determines interval (in seconds) before attempting another call
+        '''
         for country in pycountry.countries:
             res = AppleScraper.check_review_availability(app_id,country.alpha_2.lower())
             if res['has_reviews']:

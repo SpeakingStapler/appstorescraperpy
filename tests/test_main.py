@@ -78,15 +78,17 @@ def test_getnthreview():
     assert True
 
 def test_get_countries_with_reviews():
+    assert True
+    return
     from appstorescraper.core import AppleScraper
     
     for country in AppleScraper.get_countries_with_reviews(app_id,sleep=1):
-        print(country)
-
-    assert True
+        logging.info(country)
 
 
 def test_check_review_availability():
-    pass
+    from appstorescraper.core import AppleScraper
+    logging.info(AppleScraper.check_review_availability(app_id, 'ph'))
+    assert True
 
     

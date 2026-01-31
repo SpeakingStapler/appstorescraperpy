@@ -22,6 +22,10 @@ class App:
 
     @property
     def data(self):
+        '''
+        The raw JSON data of the app details as scraped from the App store
+        
+        '''
         return self.__data
     
     @property
@@ -30,6 +34,7 @@ class App:
     
     @property
     def url(self):
+        
         return self.__data['attributes']['url']
 
     @property
@@ -40,7 +45,27 @@ class App:
 
     @property
     def reviews(self) -> Reviews:
+        '''
+        ### By using app.reviews
 
+        ### This is an iterator so you can use next() 
+        ```python
+        print(next(app.reviews))
+        ```
+
+        ### or use a for loop
+        ```python
+        for review in app.reviews:
+            print(review)
+        ```
+
+        ### you can also get the nth review
+        note that this will still get all the reviews before it (1-9 will still be loaded and stored)
+        ```python
+        print(app.reviews[10])
+        ```
+        
+        '''
         if not self.__reviews:
             self.__reviews = Reviews(self)
 
@@ -48,6 +73,21 @@ class App:
     
 
     def get_reviews(self,count=20,offset=0) -> tuple[List['Review'], int]:
+        '''
+        ### By using app.get_reviews()
+        ### This provides more control
+
+        #### arguments
+
+        count: how many reviews to retrieve, sorted by the most recent review
+        
+        offset: which review index to start, useful when you want to get older reviews so you don't have to load other reviews 
+
+        #### usage
+        ```python
+        reviews = app.get_reviews(count=100,offset=0)
+        ```
+        '''
         review_data = AppleScraper._get_app_reviews_per_country(self.id,self.country,count,offset)
         
         reviews = []
