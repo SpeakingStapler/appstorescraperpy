@@ -13,11 +13,11 @@ import time
 # extend AppStoreScraper to get reviews
 class AppleScraper:
     __landing_host = "apps.apple.com"
-    __request_host = "amp-api-edge.apps.apple.com"
+    __request_host = "apps.apple.com"
     __scheme = "https"
 
     __base_landing_url = f"{__scheme}://{__landing_host}"
-    __base_request_url = f"{__scheme}://{__request_host}"
+    __base_request_url = f"{__scheme}://{__request_host}/api/apps"
 
     __user_agents = [
     # NOTE: grab from https://bit.ly/2zu0cmU
@@ -68,22 +68,7 @@ class AppleScraper:
         }
     
     def __get_review_token(landing_url):
-        res = AppleScraper.__get(landing_url)
-
-        script_path = re.search(r'<script[^>]*\s+src="(\/assets\/.+\.js)"[^>]*><\/script>',res.text)
-
-        if not script_path:
-            raise ValueError("Unable to find the script js tag in the landing page")
-        
-        # get script js content
-        scriptjs = AppleScraper.__get(f"{AppleScraper.__base_landing_url}{script_path.group(1)}")
-
-        # get token from script js
-        token = re.search(r'const \w+="(\b([A-Za-z0-9\-_]+={0,2}\.[A-Za-z0-9\-_]+={0,2}\.[A-Za-z0-9\-_]+={0,2})\b)";', scriptjs.text).group(1)
-        if not token:
-            raise ValueError("Unable to find the review token in the script js")
-        
-        return f"bearer {token}"
+        return "Bearer "
             
     def __parse_review_data(res):
         response = res.json()
@@ -91,6 +76,7 @@ class AppleScraper:
         return [{'id':data['id']} | data['attributes'] for data in response['data']]
 
     def __get_next_offset(res):
+
         response = res.json()
         next_offset = response.get('next')
 
@@ -269,3 +255,6 @@ class AppleScraper:
         res = AppleScraper.__get(url,headers,params = request_params)
 
         return res.json()['data'][0]
+
+
+
