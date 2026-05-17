@@ -1,4 +1,4 @@
-import appstorescraper
+from src import appstorescraper
 
 import logging
 
@@ -10,7 +10,7 @@ def test_getappdetails():
     try:
         app = appstorescraper.get_app(app_id)
 
-        logging.info(f'App name: {app.name} | App ID: {app.id}')
+        logging.debug(f'App name: {app.name} | App ID: {app.id}')
         assert app.name == app_name
 
     except Exception as e:
@@ -59,7 +59,7 @@ def test_getreviews_app():
     logging.info(f'App name: {app.name} | App ID: {app.id} | Ave rating: {app.ratings.average}')
     logging.info('1-star:{0} | 2-star:{1} | 3-star: {2} | 4-star: {3} | 5-star: {4}'.format(*app.ratings.list))
 
-    for _ in range(30):  
+    for _ in range(100):  
         review = next(app.reviews)
         logging.info(f'Title: {review.title} | Review: {review.content}')
 
@@ -77,18 +77,9 @@ def test_getnthreview():
 
     assert True
 
-def test_get_countries_with_reviews():
-    assert True
-    return
-    from appstorescraper.core import AppleScraper
-    
-    for country in AppleScraper.get_countries_with_reviews(app_id,sleep=1):
-        logging.info(country)
-
 
 def test_check_review_availability():
-    from appstorescraper.core import AppleScraper
-    logging.info(AppleScraper.check_review_availability(app_id, 'ph'))
+    logging.info(appstorescraper.appstorescraper.AppleScraper.check_review_availability(app_id, 'ph'))
     assert True
 
     
